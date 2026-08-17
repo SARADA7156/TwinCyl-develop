@@ -19,7 +19,7 @@ interface NavProps {
 export default function Nav({ isOpen, toggle }: NavProps) {
     return (
         <>
-            <nav className={`flex z-40 flex-col bg-gray-950 h-full fixed top-0 left-0 ${isOpen ? "w-60" : "w-16"}`}>
+            <nav className={`flex z-40 flex-col bg-[#000000] h-full fixed top-0 left-0 ${isOpen ? "w-60" : "w-16"}`}>
                 <button
                     type="button"
                     className="p-2 cursor-pointer hover:text-fuchsia-500"
