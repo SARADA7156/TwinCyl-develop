@@ -15,7 +15,7 @@ export default function MainFlame({ children }: { children: React.ReactNode }) {
         <>
             <Header isOpen={isOpen} />
             <Nav isOpen={isOpen} toggle={toggle} />
-            <div>
+            <div className={`${isOpen ? "ms-60" : "ms-16"} mt-16 p-4`}>
                 {children}
             </div>
         </>
