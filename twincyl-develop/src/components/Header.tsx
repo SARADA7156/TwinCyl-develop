@@ -1,11 +1,17 @@
 import Image from "next/image";
 import Link from "next/link";
-import Nav from "./Nav";
 
-export default function Header() {
+interface HeaderProps {
+    isOpen: boolean;
+}
+
+export default function Header({ isOpen }: HeaderProps) {
     return (
-        <header className="p-2 shadow-md shadow-fuchsia-700 bg-gray-950 fixed top-0 left-0 w-screen flex items-center">
-            <Link href={"/"}>
+        <header className={`
+            ${isOpen ? "left-60" : "left-16"}
+            p-2 shadow-md shadow-fuchsia-700 bg-gray-950 fixed top-0 w-screen flex items-center
+        `}>
+            <Link href={"/dashboard"} className="flex">
                 <Image
                     src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/TwinCylStudioLogoMini.png`}
                     alt="TwinCylStudioLogo"
@@ -14,9 +20,8 @@ export default function Header() {
                     className="h-auto w-32 lg:w-40"
                     loading="eager"
                 />
+                <h1 className="text-3xl font-bold ms-2">develop</h1>
             </Link>
-
-            <Nav />
         </header>
     )
 }
