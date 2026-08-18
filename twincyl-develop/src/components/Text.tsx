@@ -1,10 +1,4 @@
-import clsx from "clsx";
-import { ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-function cn(...inputs: ClassValue[]) {
-    return twMerge(clsx(inputs));
-}
+import { cn } from "../lib/utils";
 
 type TextProps<T extends React.ElementType = 'p'> = {
     as?: T;
