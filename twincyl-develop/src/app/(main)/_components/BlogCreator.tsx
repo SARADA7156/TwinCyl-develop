@@ -8,14 +8,15 @@ import { FieldError, useForm } from "react-hook-form";
 import { z } from "zod";
 
 const formSchema = z.object({
-    title: z.string().min(1, { message: "ブログのタイトルを入力" }),
+    title: z.string().min(1),
+    blogType: z.enum(["blog", "technical"]),
     tags: z.string().optional(),
-    mainText: z.string().min(1, { message: "本文を入力" }),
+    mainText: z.string().min(1),
 });
 
 type FromInput = z.infer<typeof formSchema>;
 
-export default function BlogCreator({ type }: { type: "blog" | "technical_blog" }) {
+export default function BlogCreator() {
     const {
         register,
         handleSubmit,
@@ -25,6 +26,7 @@ export default function BlogCreator({ type }: { type: "blog" | "technical_blog" 
         defaultValues: {
             title: "",
             tags: "",
+            blogType: "blog"
         },
     });
 
@@ -44,7 +46,6 @@ export default function BlogCreator({ type }: { type: "blog" | "technical_blog" 
             title: data.title,
             tags: formattedTags,
             mainText: data.mainText,
-            blogType: type,
         };
 
         console.log("送信データ:", payload);
@@ -73,6 +74,14 @@ export default function BlogCreator({ type }: { type: "blog" | "technical_blog" 
                 {errors.title && <Text className="text-red-500">※タイトルが入力されていません</Text>}
             </div>
 
+            {/* ブログタイプ選択 */}
+            <div className="mt-2">
+                <select id="select-blog-type" {...register("blogType")} className={CreateInputClass(errors.tags, "w-1/6")}>
+                    <option value="blog">一般ブログ</option>
+                    <option value="technical">技術ブログ</option>
+                </select>
+            </div>
+
             {/* タグ入力欄 */}
             <div className="mt-2">
                 <input
@@ -90,7 +99,7 @@ export default function BlogCreator({ type }: { type: "blog" | "technical_blog" 
                     id="input-main-text"
                     {...register("mainText")}
                     className={CreateInputClass(errors.mainText, "w-full h-full")}
-                    placeholder="本文を入力"
+                    placeholder="Markdown形式で本文を入力"
                 />
                 {errors.mainText && <Text className="text-red-500">※本文を入力してください</Text>}
             </div>

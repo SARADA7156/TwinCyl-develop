@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { MdAddAlert, MdArticle, MdCode, MdDashboard, MdHealthAndSafety, MdMenu, MdNotifications, MdShowChart } from "react-icons/md";
+import { MdAddAlert, MdArticle, MdBuild, MdDashboard, MdHealthAndSafety, MdMenu, MdNotifications, MdShowChart } from "react-icons/md";
 
 const NAV_DATA = [
     { label: "ダッシュボード", link: "dashboard", icon: MdDashboard },
     { label: "通知", link: "notice", icon: MdNotifications },
     { label: "ブログを作成", link: "create_blog", icon: MdArticle },
-    { label: "技術ブログを作成", link: "create_technical_articles", icon: MdCode },
+    { label: "ブログを管理", link: "manage_blog", icon: MdBuild },
     { label: "お知らせを追加", link: "add_notice", icon: MdAddAlert },
     { label: "メトリクス", link: "metrics", icon: MdShowChart },
     { label: "診断", likn: "health", icon: MdHealthAndSafety }
