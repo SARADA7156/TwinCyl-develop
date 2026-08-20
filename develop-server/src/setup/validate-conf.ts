@@ -6,6 +6,7 @@ export const validationSchema: ObjectSchema = Joi.object({
         .default('development'),
     // NestJSの環境変数スキーマ定義
     PORT: Joi.number().default(8080),
+    CORS_ORIGIN: Joi.string().uri().required(),
 
     // Mongoose環境変数のスキーマ定義
     MONGO_INITDB_DATABASE: Joi.string().required(),
