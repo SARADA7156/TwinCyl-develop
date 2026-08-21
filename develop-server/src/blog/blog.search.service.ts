@@ -10,7 +10,7 @@ export class BlogSearchService {
         @InjectModel(Blog.name) private blogModel: Model<BlogDocument>
     ) {}
 
-    async findMany(status: BlogStatus, page: number = 1, limit: number = 20): Promise<PaginatedBlogs> {
+    async findMany(status?: BlogStatus, page: number = 1, limit: number = 20): Promise<PaginatedBlogs> {
         const { data, total } = await this.findBlogs(status, page, limit);
 
         return {
@@ -22,13 +22,14 @@ export class BlogSearchService {
         };
     }
 
-    private async findBlogs(status: BlogStatus, page: number = 1, limit: number = 20): Promise<{ data: Blog[], total: number }> {
+    private async findBlogs(status?: BlogStatus, page: number = 1, limit: number = 20): Promise<{ data: Blog[], total: number }> {
         // 取得開始位置の計算
         const skip = (page - 1) * limit;
+        const filter = status ? { status } : {};
 
         const [data, total] = await Promise.all([
             this.blogModel
-                .find({ status })
+                .find(filter, { __v: 0, _id: 0, mainText: 0 })
                 .sort({ publishedAt: -1 })
                 .skip(skip)
                 .limit(limit)

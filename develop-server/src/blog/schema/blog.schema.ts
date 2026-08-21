@@ -36,6 +36,9 @@ export class Blog {
 
     @Prop()
     publishedAt?: Date;
+
+    createdAt!: Date;
+    updatedAt!: Date;
 }
 
 export const BlogSchema = SchemaFactory.createForClass(Blog);

@@ -3,8 +3,9 @@ import { BlogStatus } from "../schema/blog.schema";
 import { Type } from "class-transformer";
 
 export class GetBlogsDto {
+    @IsOptional()
     @IsEnum(BlogStatus)
-    status!: BlogStatus;
+    status?: BlogStatus;
 
     @IsOptional()
     @Type(() => Number)
