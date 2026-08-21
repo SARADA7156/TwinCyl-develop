@@ -19,7 +19,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${notoSans.className} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col lg:text-lg">
+      <body className="min-h-full flex flex-col">
         {children}
       </body>
     </html>

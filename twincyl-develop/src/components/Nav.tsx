@@ -5,7 +5,7 @@ const NAV_DATA = [
     { label: "ダッシュボード", link: "dashboard", icon: MdDashboard },
     { label: "通知", link: "notice", icon: MdNotifications },
     { label: "ブログを作成", link: "create_blog", icon: MdArticle },
-    { label: "ブログを管理", link: "manage_blog", icon: MdBuild },
+    { label: "ブログを管理", link: "manage_blog?page=1&limit=20&status=published", icon: MdBuild },
     { label: "お知らせを追加", link: "add_notice", icon: MdAddAlert },
     { label: "メトリクス", link: "metrics", icon: MdShowChart },
     { label: "診断", likn: "health", icon: MdHealthAndSafety }
