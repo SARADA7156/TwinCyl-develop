@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Blog, BlogDocument, BlogStatus, BlogType } from './schema/blog.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { CreateBlogDto } from './dto/create-blog.dto';
+import { BlogDto } from './dto/blog.dto';
 import { LoggerService } from '@/logger/logger.service';
 
 export interface PaginatedBlogs {
@@ -20,7 +20,7 @@ export class BlogService {
         private readonly logger: LoggerService
     ) {}
 
-    async create({ title, mainText, blogType, status, tags }: CreateBlogDto): Promise<Blog> {
+    async create({ title, mainText, blogType, status, tags }: BlogDto): Promise<Blog> {
         const result =  await this.blogModel.create({
             title,
             mainText,
@@ -30,12 +30,17 @@ export class BlogService {
             publishedAt: status === BlogStatus.PUBLISHED ? new Date() : undefined,
         });
 
+        this.logger.log(`新しいブログが id: ${result._id} として保存されました。 公開状態: ${status}`);
+
         return result;
     }
 
-    async publish(uuid: string): Promise<Blog> {
+    async publish(uuid: string): Promise<void> {
         const blog = await this.blogModel.findOne({ uuid });
-        if (!blog) throw new NotFoundException({ status: 404, message: "指定された記事が見つかりません。" });
+        if (!blog) {
+            this.logger.error(`公開処理でuuid: ${uuid} を検索しましたが見つかりませんでした。`)
+            throw new NotFoundException({ status: 404, message: "指定された記事が見つかりません。" })
+        };
 
         blog.status = BlogStatus.PUBLISHED;
 
@@ -43,6 +48,7 @@ export class BlogService {
             blog.publishedAt = new Date();
         }
 
-        return blog.save();
+        blog.save();
+        this.logger.log(`uuid: ${uuid}は正常に公開されました。`);
     }
 }

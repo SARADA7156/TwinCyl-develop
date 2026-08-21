@@ -1,7 +1,7 @@
 import { IsArray, IsEnum, IsString } from "class-validator";
 import { BlogStatus, BlogType } from "../schema/blog.schema";
 
-export class CreateBlogDto {
+export class BlogDto {
     @IsString()
     title!: string;
 
@@ -16,4 +16,9 @@ export class CreateBlogDto {
 
     @IsArray()
     tags!: string[];
+}
+
+export class PublishBlogDto {
+    @IsString()
+    uuid!: string;
 }
