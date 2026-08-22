@@ -1,5 +1,5 @@
 import { IconType } from "react-icons";
-import { BlogListItem } from "./types/type";
+import { BlogListItem } from "@/src/types/type";
 import { MdLock, MdPublic } from "react-icons/md";
 
 export const BLOG_TYPE_LABELS: Record<BlogListItem["blogType"], string> = {

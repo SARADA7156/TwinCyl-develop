@@ -1,5 +1,5 @@
 import MainContainer from "@/src/components/MainContainer";
-import { BlogListData } from "./types/type";
+import { BlogListData } from "@/src/types/type";
 import Link from "next/link";
 import { formatDate } from "@/src/lib/utils";
 import { BLOG_STATUS_LABELS, BLOG_TYPE_LABELS } from "./labelMap";

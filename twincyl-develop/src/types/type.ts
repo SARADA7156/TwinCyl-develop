@@ -1,7 +1,12 @@
+import { BlogEditorInput } from "./blogSchema";
+
+export type BlogType = "blog" | "technical";
+export type BlogStatus = "published" | "draft";
+
 export type BlogListItem = {
     title: string;
-    blogType: "blog" | "technical";
-    status: "published" | "draft";
+    blogType: BlogEditorInput["blogType"];
+    status: BlogStatus;
     tags: string[];
     publishedAt: string;
     uuid: string;
