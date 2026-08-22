@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Blog, BlogDocument, BlogStatus } from "./schema/blog.schema";
@@ -38,5 +38,15 @@ export class BlogSearchService {
         ]);
 
         return { data, total };
+    }
+
+    public async findOne(uuid: string): Promise<Blog> {
+        const blog = await this.blogModel.findOne({ uuid }, { __v: 0, _id: 0 });
+
+        if (!blog) {
+            throw new NotFoundException(`uuid: ${uuid} は存在しません。`);
+        }
+
+        return blog;
     }
 }

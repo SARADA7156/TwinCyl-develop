@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { BlogService, PaginatedBlogs } from './blog.service';
 import { GetBlogsDto } from './dto/get-blogs.dto';
 import { Blog } from './schema/blog.schema';
@@ -17,6 +17,14 @@ export class BlogController {
         const { status, page, limit } = query;
 
         return await this.searchService.findMany(status, page, limit);
+    }
+
+    @Get("getOne")
+    async getOne(@Query("uuid") uuid?: string) {
+        if (!uuid) {
+            throw new BadRequestException("クエリパラメーターにuuidが指定されていません。");
+        }
+        return await this.searchService.findOne(uuid);
     }
 
     @Post("create")

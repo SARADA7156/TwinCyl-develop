@@ -8,6 +8,6 @@ export const BLOG_TYPE_LABELS: Record<BlogListItem["blogType"], string> = {
 } as const;
 
 export const BLOG_STATUS_LABELS: Record<BlogListItem["status"], { label: string, icon: IconType }> = {
-    draft: { label: "未公開", icon: MdLock },
+    draft: { label: "下書き", icon: MdLock },
     published: { label: "公開済み", icon: MdPublic }
 } as const;

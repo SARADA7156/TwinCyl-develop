@@ -36,7 +36,7 @@ export default function SearchForm() {
                 defaultValue={"published"}
             >
                 <option value="published">公開済み</option>
-                <option value="draft">未公開</option>
+                <option value="draft">下書き</option>
             </select>
 
             {/* ブログタイプ選択 */}

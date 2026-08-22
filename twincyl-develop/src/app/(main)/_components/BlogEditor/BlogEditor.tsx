@@ -6,7 +6,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FieldError, useForm } from "react-hook-form";
 import { onSubmit } from "./handleSubmit";
 import Button from "@/src/components/Button";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { BlogStatus } from "@/src/types/type";
 
 const DEFAULT_VALUES: BlogEditorInput = {
     title: "",
@@ -15,7 +17,12 @@ const DEFAULT_VALUES: BlogEditorInput = {
     mainText: "",
 };
 
-export default function BlogEditor(props: Partial<BlogEditorInput> = {}) {
+type BlogEditorProps = Partial<BlogEditorInput> & {
+    blogId?: string;
+    status?: BlogStatus;
+};
+
+export default function BlogEditor({ blogId, status, ...props }: BlogEditorProps) {
     const {
         register,
         handleSubmit,
@@ -29,27 +36,53 @@ export default function BlogEditor(props: Partial<BlogEditorInput> = {}) {
     });
 
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const [editorMode, setEditorMode] = useState<"create" | "edit">("create");
+
+    useEffect(() => {
+        const params = new URLSearchParams(searchParams.toString());
+        const mode = params.get("editor_mode");
+
+        setEditorMode(mode === "edit" ? "edit" : "create");
+    }, []);
+
+    const submitBlog = (action: BlogStatus) => {
+        handleSubmit((data) => {
+            onSubmit(data, router, editorMode, action)
+        });
+    }
 
     const CreateInputClass = (error: FieldError | undefined, className?: string): string => {
         return cn("border border-[#aaaaaa] p-1 rounded-md", className, error && "border-red-500")
     }
 
     return (
-        <form onSubmit={handleSubmit((data, e) => onSubmit(data, router, e))}>
+        <form>
             <div className="flex">
+                {editorMode === "create" &&
+                    <Button
+                        type="submit"
+                        className="border-fuchsia-600 hover:bg-fuchsia-800"
+                        disabled={isSubmitting}
+                        onClick={() => submitBlog("published")}
+                    >
+                        公開
+                    </Button>
+                }
+                {editorMode === "edit" &&
+                    <Button
+                        type="button"
+                        className="border-fuchsia-600 hover:bg-fuchsia-800"
+                        disabled={isSubmitting}
+                        onClick={() => submitBlog(status || "draft")}
+                    >
+                        変更を保存
+                    </Button>
+                }
                 <Button
-                    type="submit"
-                    className="border-fuchsia-600 hover:bg-fuchsia-800"
+                    type="button"
+                    onClick={() => submitBlog("draft")}
                     disabled={isSubmitting}
-                    name="action"
-                    value="published"
-                >
-                    公開
-                </Button>
-                <Button
-                    type="submit"
-                    name="action"
-                    value="draft"
                 >
                     下書きを保存
                 </Button>

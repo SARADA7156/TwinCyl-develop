@@ -50,7 +50,7 @@ export default async function ManagerBlog({ searchParams }: Props) {
                                 >
                                     <div className="flex flex-col">
                                         <Link
-                                            href={`/blog/view?uuid=${d.uuid}`}
+                                            href={`/manage_blog/edit?uuid=${d.uuid}&editor_mode=edit`}
                                             className="hover:underline text-lg max-w-xl w-xl truncate"
                                         >
                                             {d.title}

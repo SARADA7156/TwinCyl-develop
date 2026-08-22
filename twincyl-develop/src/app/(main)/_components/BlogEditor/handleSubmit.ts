@@ -1,29 +1,39 @@
 'use client';
-import { BaseSyntheticEvent } from "react";
 import { BlogEditorInput } from "@/src/types/blogSchema";
 import { formatTags } from "./formatTags";
 import { apiClient } from "@/src/lib/axiosClient";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { BlogStatus } from "@/src/types/type";
 
-export const onSubmit = (data: BlogEditorInput, router: AppRouterInstance, e?: BaseSyntheticEvent) => {
+export const onSubmit = async(
+    data: BlogEditorInput,
+    router: AppRouterInstance,
+    mode: "create" | "edit",
+    status: BlogStatus
+) => {
     const formattedTags = formatTags(data.tags);
-    const nativeEvent = e?.nativeEvent as SubmitEvent;
 
-    if (nativeEvent && "submitter" in nativeEvent) {
-        const submitter = nativeEvent.submitter as HTMLButtonElement | null;
-        const action = submitter?.value;
+    const payload = {
+        title: data.title,
+        tags: formattedTags,
+        blogType: data.blogType,
+        status,
+        mainText: data.mainText,
+    };
 
-        const payload = {
-            title: data.title,
-            tags: formattedTags,
-            blogType: data.blogType,
-            status: action,
-            mainText: data.mainText,
-        };
+    if (mode === "create") {
+        await apiClient.post("/blog/create", payload);
 
-        apiClient.post("/blog/create", payload)
-            .then(() => {
-                router.push(`/manage_blog?page=1&limit=20&status=${action}`)
-            });
+        router.push(
+            `/manage_blog?page=1&limit=20&status=${status}`
+        );
+    }
+
+    if (mode === "edit") {
+        await apiClient.post("/blog/update", payload);
+
+        router.push(
+            `/manage_blog?page=1&limit=20&status=${status}`
+        );
     }
 }
