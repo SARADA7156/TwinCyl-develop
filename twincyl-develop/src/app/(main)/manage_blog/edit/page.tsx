@@ -41,6 +41,7 @@ export default async function BlogEdit({ searchParams }: Props) {
     return (
         <MainContainer title="ブログを編集">
             <BlogEditor
+                editorMode="edit"
                 blogId={uuid}
                 status={status}
                 title={title}

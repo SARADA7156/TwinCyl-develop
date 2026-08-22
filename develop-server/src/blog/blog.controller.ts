@@ -2,7 +2,7 @@ import { BadRequestException, Body, Controller, Get, Post, Query } from '@nestjs
 import { BlogService, PaginatedBlogs } from './blog.service';
 import { GetBlogsDto } from './dto/get-blogs.dto';
 import { Blog } from './schema/blog.schema';
-import { BlogDto, PublishBlogDto } from './dto/blog.dto';
+import { BlogDto, PublishBlogDto, UpdateBlogDto } from './dto/blog.dto';
 import { BlogSearchService } from './blog.search.service';
 
 @Controller('blog')
@@ -36,5 +36,11 @@ export class BlogController {
     async publishBlog(@Body() dto: PublishBlogDto): Promise<{ message: string }> {
         await this.blogService.publish(dto.uuid);
         return { message: "ブログが正常に公開されました" };
+    }
+
+    @Post("update")
+    async updateBlog(@Body() dto: UpdateBlogDto): Promise<{ message: string }> {
+        await this.blogService.update(dto);
+        return { message: "ブログが正常に更新されました" };
     }
 }

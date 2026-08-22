@@ -44,7 +44,7 @@ export class BlogSearchService {
         const blog = await this.blogModel.findOne({ uuid }, { __v: 0, _id: 0 });
 
         if (!blog) {
-            throw new NotFoundException(`uuid: ${uuid} は存在しません。`);
+            throw new NotFoundException({ status: 404, message: "指定された記事が見つかりません。" });
         }
 
         return blog;

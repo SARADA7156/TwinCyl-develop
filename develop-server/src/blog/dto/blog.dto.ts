@@ -22,3 +22,8 @@ export class PublishBlogDto {
     @IsString()
     uuid!: string;
 }
+
+export class UpdateBlogDto extends BlogDto {
+    @IsString()
+    uuid!: string;
+}

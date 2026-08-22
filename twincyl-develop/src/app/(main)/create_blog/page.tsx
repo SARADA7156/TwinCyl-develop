@@ -4,7 +4,7 @@ import BlogEditor from "../_components/BlogEditor/BlogEditor";
 export default function CreateBlog() {
     return (
         <MainContainer title="ブログを作成">
-            <BlogEditor />
+            <BlogEditor editorMode="create" />
         </MainContainer>
     );
 }

@@ -4,11 +4,11 @@ import { cn } from "@/src/lib/utils";
 import { BlogEditorInput, formSchema } from "@/src/types/blogSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FieldError, useForm } from "react-hook-form";
-import { onSubmit } from "./handleSubmit";
 import Button from "@/src/components/Button";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 import { BlogStatus } from "@/src/types/type";
+import { formatTags } from "./formatTags";
+import { apiClient } from "@/src/lib/axiosClient";
+import { useRouter } from "next/navigation";
 
 const DEFAULT_VALUES: BlogEditorInput = {
     title: "",
@@ -20,9 +20,10 @@ const DEFAULT_VALUES: BlogEditorInput = {
 type BlogEditorProps = Partial<BlogEditorInput> & {
     blogId?: string;
     status?: BlogStatus;
+    editorMode: "create" | "edit";
 };
 
-export default function BlogEditor({ blogId, status, ...props }: BlogEditorProps) {
+export default function BlogEditor({ blogId, status, editorMode, ...props }: BlogEditorProps) {
     const {
         register,
         handleSubmit,
@@ -34,34 +35,43 @@ export default function BlogEditor({ blogId, status, ...props }: BlogEditorProps
             ...props
         },
     });
-
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const [editorMode, setEditorMode] = useState<"create" | "edit">("create");
 
-    useEffect(() => {
-        const params = new URLSearchParams(searchParams.toString());
-        const mode = params.get("editor_mode");
+    const onSubmit = async (data: BlogEditorInput, status: BlogStatus) => {
+        const payload = {
+            title: data.title,
+            tags: formatTags(data.tags),
+            blogType: data.blogType,
+            status,
+            mainText: data.mainText
+        };
 
-        setEditorMode(mode === "edit" ? "edit" : "create");
-    }, []);
+        try {
+            if (editorMode === "create") {
+                await apiClient.post("/blog/create", payload);
+            } else {
+                await apiClient.post("/blog/update", { uuid: blogId, ...payload });
+            }
+            router.push(`/manage_blog?page=1&limit=20&status=${status}`)
+        } catch (e) {
+            console.error(e);
+        }
+    };
 
     const submitBlog = (action: BlogStatus) => {
-        handleSubmit((data) => {
-            onSubmit(data, router, editorMode, action)
-        });
-    }
+        return handleSubmit((data) => onSubmit(data, action))();
+    };
 
     const CreateInputClass = (error: FieldError | undefined, className?: string): string => {
         return cn("border border-[#aaaaaa] p-1 rounded-md", className, error && "border-red-500")
     }
 
     return (
-        <form>
+        <form onSubmit={(e) => e.preventDefault()}>
             <div className="flex">
                 {editorMode === "create" &&
                     <Button
-                        type="submit"
+                        type="button"
                         className="border-fuchsia-600 hover:bg-fuchsia-800"
                         disabled={isSubmitting}
                         onClick={() => submitBlog("published")}
