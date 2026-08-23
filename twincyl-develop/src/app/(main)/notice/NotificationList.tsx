@@ -8,7 +8,7 @@ export default function NotificationList() {
 
     return (
         <>
-            <form className="flex justify-center items-center">
+            <form className="flex justify-center items-center sticky top-20">
                 <div className="flex border border-[#444444] bg-[#111111] justify-center items-center rounded-2xl px-1">
                     <MdSearch className="text-3xl" />
                     <input type="text" name="search-notification" className="w-96" placeholder="通知を検索" />

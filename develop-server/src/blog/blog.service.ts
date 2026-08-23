@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Blog, BlogDocument, BlogStatus, BlogType } from './schema/blog.schema';
+import { Blog, BlogDocument, BlogStatus } from './schema/blog.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { BlogDto, UpdateBlogDto } from './dto/blog.dto';
 import { LoggerService } from '@/logger/logger.service';
-import { BlogSearchService } from './blog.search.service';
+import { NotificationService } from '@/notification/notification.service';
 
 export interface PaginatedBlogs {
   data: Blog[];
@@ -18,7 +18,7 @@ export interface PaginatedBlogs {
 export class BlogService {
     constructor(
         @InjectModel(Blog.name) private blogModel: Model<BlogDocument>,
-        private readonly searchService: BlogSearchService,
+        private readonly notification: NotificationService,
         private readonly logger: LoggerService
     ) {}
 
@@ -33,6 +33,10 @@ export class BlogService {
         });
 
         this.logger.log(`新しいブログが id: ${result._id} として保存されました。 公開状態: ${status}`);
+        this.notification.send({
+            level: "info",
+            message: `新しいブログが id: ${result._id} として保存されました。 公開状態: ${status}`
+        });
 
         return result;
     }
@@ -66,5 +70,9 @@ export class BlogService {
         }
 
         this.logger.log(`uuid: ${uuid} のブログが更新されました。`);
+        this.notification.send({
+            level: "info",
+            message: `ブログが正常に更新されました。`
+        });
     }
 }

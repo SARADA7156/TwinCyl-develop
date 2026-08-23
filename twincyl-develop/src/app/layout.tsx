@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 import { NotificationToast } from "../components/Notification/NotificationToast";
+import NotificationSSE from "../components/Notification/NotificationSSE";
 
 const notoSans = Noto_Sans_JP({
   subsets: ['latin'],
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
         {children}
         <NotificationToast />
+        <NotificationSSE />
       </body>
     </html>
   );

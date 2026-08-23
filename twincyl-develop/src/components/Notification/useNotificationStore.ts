@@ -78,10 +78,31 @@ export const useNotificationStore = create<NotificationState>((set) => {
             const read = false;
             const date = new Date();
 
-            set((state) => ({
-                notifications: [...state.notifications, { id, date, level, message, read, isLocal }],
-                popupNotifications: [...state.popupNotifications, { id, date, level, message, read, isLocal }]
-            }));
+            set((state) => {
+                if (state.notifications.some((n) => n.id === id)) {
+                    return state;
+                }
+
+                const notification = {
+                    id,
+                    date,
+                    level,
+                    message,
+                    read,
+                    isLocal
+                };
+
+                return {
+                    notifications: [
+                        ...state.notifications,
+                        notification
+                    ],
+                    popupNotifications: [
+                        ...state.notifications,
+                        notification,
+                    ],
+                };
+            });
 
             // ポップアップ表示されている通知を自動的に削除する
             setTimeout(() => {
