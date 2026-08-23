@@ -1,23 +1,10 @@
 'use client';
 
-import { MdClose, MdError, MdInfo, MdWarning } from "react-icons/md";
-import { Notifications, useNotificationStore } from "./useNotificationStore";
-import { IconType } from "react-icons";
+import { MdClose } from "react-icons/md";
+import { levelIcon, levels, NotificationItem, useNotificationStore } from "./useNotificationStore";
 import "./Notification.css"
 
-const levels: Record<Notifications["level"], string> = {
-    info: "通知",
-    warn: "警告",
-    error: "エラー"
-}
-
-const levelIcon: Record<Notifications["level"], IconType> = {
-    info: MdInfo,
-    warn: MdWarning,
-    error: MdError
-}
-
-export const Notification = () => {
+export const NotificationToast = () => {
     const { popupNotifications, removePopupNotifications } = useNotificationStore();
 
     return (

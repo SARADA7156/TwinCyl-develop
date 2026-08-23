@@ -1,20 +1,36 @@
 'use client';
 
 import { create } from "zustand";
+import { MdError, MdInfo, MdWarning } from "react-icons/md";
+import { IconType } from "react-icons";
 
-export interface Notifications {
+export interface NotificationItem {
     id: string;
+    date: Date;
     level: "info" | "warn" | "error";
     message: string;
     read: boolean;
+    isLocal: boolean
+}
+
+export const levels: Record<NotificationItem["level"], string> = {
+    info: "通知",
+    warn: "警告",
+    error: "エラー"
+}
+
+export const levelIcon: Record<NotificationItem["level"], IconType> = {
+    info: MdInfo,
+    warn: MdWarning,
+    error: MdError
 }
 
 export interface NotificationState {
     /** 通知が格納される変数です */
-    notifications: Notifications[];
+    notifications: NotificationItem[];
 
     /** 現在ポップアップ表示されている通知のデータを格納する */
-    popupNotifications: Notifications[];
+    popupNotifications: NotificationItem[];
 
     /**
      * 通知を追加します。
@@ -22,9 +38,17 @@ export interface NotificationState {
      * @param level 通知のレベル
      */
     addNotification: (
-        message: Notifications["message"],
-        level: Notifications["level"],
+        message: NotificationItem["message"],
+        level: NotificationItem["level"],
+        isLocal?: boolean,
+        id?: string,
     ) => void;
+
+    /**
+     * 指定した id の通知を既読状態にするメソッド
+     * @param id 既読状態にするid
+     */
+    readNotification: (id: string) => void;
 
     /**
      * 通知を削除します。
@@ -41,7 +65,7 @@ export interface NotificationState {
 
 export const useNotificationStore = create<NotificationState>((set) => {
     // 共通の削除ロジック(ヘルパー関数)
-    const removeFromList = (list: Notifications[], id: string) =>
+    const removeFromList = (list: NotificationItem[], id: string) =>
         list.filter((n) => n.id !== id);
 
     return {
@@ -49,14 +73,14 @@ export const useNotificationStore = create<NotificationState>((set) => {
 
         popupNotifications: [],
 
-        addNotification: (message, level = "info") => {
+        addNotification: (message, level = "info", isLocal = true, id = crypto.randomUUID()) => {
             // 重複を防いだ一意のidを生成する
-            const id = crypto.randomUUID();
             const read = false;
+            const date = new Date();
 
             set((state) => ({
-                notifications: [...state.notifications, { id, level, message, read }],
-                popupNotifications: [...state.popupNotifications, { id, level, message, read }]
+                notifications: [...state.notifications, { id, date, level, message, read, isLocal }],
+                popupNotifications: [...state.popupNotifications, { id, date, level, message, read, isLocal }]
             }));
 
             // ポップアップ表示されている通知を自動的に削除する
@@ -66,6 +90,16 @@ export const useNotificationStore = create<NotificationState>((set) => {
                 }));
             }, 5000);
         },
+
+        readNotification: (id) => {
+            set((state) => ({
+                notifications: state.notifications.map(n => {
+                    if (n.id === id) return { ...n, read: true };
+                    return n;
+                })
+            }))
+        },
+
         removeNotifications: (id) => set((state) => ({
             notifications: removeFromList(state.notifications, id),
         })),

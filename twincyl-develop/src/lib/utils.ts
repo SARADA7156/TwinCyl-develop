@@ -8,9 +8,12 @@ export function cn(...inputs: ClassValue[]) {
 
 export function formatDate(isoDate: string): string {
     const date = new Date(isoDate);
-    return date.toLocaleDateString("ja-JP", {
+    const formattedDate = date.toLocaleDateString("ja-JP", {
         year: "numeric",
         month: "2-digit",
         day: "2-digit"
     });
+
+    const formattedTime = date.toLocaleTimeString();
+    return `${formattedDate} ${formattedTime}`
 }

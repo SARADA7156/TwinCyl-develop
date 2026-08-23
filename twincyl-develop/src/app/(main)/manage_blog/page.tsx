@@ -72,7 +72,7 @@ export default async function ManagerBlog({ searchParams }: Props) {
                                         <p className="text-sm">作成日: {formatDate(d.createdAt)}</p>
                                     </div>
                                 </li>
-                            )
+                            );
                         })}
                     </ul>
                 </div>

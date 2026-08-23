@@ -1,0 +1,72 @@
+'use client';
+import { levelIcon, levels, useNotificationStore } from "@/src/components/Notification/useNotificationStore"
+import { cn, formatDate } from "@/src/lib/utils";
+import { MdCheck, MdClose } from "react-icons/md";
+
+export default function NotificationList() {
+    const { notifications, removeNotifications, readNotification } = useNotificationStore();
+
+    return (
+        <ul>
+            {notifications.map((notice) => {
+                const level = notice.level;
+                const Icon = levelIcon[level];
+                return (
+                    <li
+                        key={notice.id}
+                        className="border-b border-b-[#ffffff34] hover:bg-[#333333b4] p-1 flex items-center cursor-default"
+                    >
+                        <div className={cn(
+                            "flex items-center min-w-28",
+                            level === "info" && "text-blue-500",
+                            level === "warn" && "text-amber-300",
+                            level === "error" && "text-red-600"
+                        )}>
+                            <Icon className="text-3xl me-2" />
+                            <p>{levels[level]}</p>
+                        </div>
+
+                        {/* 通知の日付 */}
+                        <p>{formatDate(notice.date.toString())}</p>
+
+                        {/* 通知の種類 */}
+                        <p className="ms-6 bg-[#81818169] text-[#dadada] px-2 rounded-2xl">{notice.isLocal ? "即時通知" : "一般通知"}</p>
+
+                        {/* 通知本文 */}
+                        <p className="ms-6">{notice.message}</p>
+
+                        {/* 通知の未読・既読状態 */}
+                        {!notice.read &&
+                            <p className="bg-[#81818169] text-[#dadada] px-2 text-sm rounded-2xl">未読</p>
+                        }
+
+                        {/* 通知id */}
+                        <p className="ms-6 text-[#a1a1a1] text-sm">id: {notice.id}</p>
+
+                        {/* 通知操作処理ボタン類 */}
+                        <div className="ms-auto me-5 text-lg">
+                            {/* 通知既読ボタン */}
+                            {!notice.read &&
+                                <button
+                                    className="rounded-2xl hover:bg-[#ffffff5d] p-1 cursor-pointer"
+                                    title="通知を既読にする"
+                                    onClick={() => readNotification(notice.id)}
+                                >
+                                    <MdCheck />
+                                </button>
+                            }
+                            {/* 通知削除ボタン */}
+                            <button
+                                className="rounded-2xl hover:bg-[#ffffff5d] p-1 cursor-pointer"
+                                title="通知を削除する"
+                                onClick={() => removeNotifications(notice.id)}
+                            >
+                                <MdClose />
+                            </button>
+                        </div>
+                    </li>
+                )
+            })}
+        </ul>
+    )
+}

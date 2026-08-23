@@ -63,7 +63,7 @@ export default function BlogEditor({ blogId, status, editorMode, ...props }: Blo
     const { addNotification } = useNotificationStore();
 
     const onError = () => {
-        addNotification("入力内容に誤りがあります。", "error");
+        addNotification("エディターの入力内容に誤りがあります。", "warn");
     }
 
     const submitBlog = (action: BlogStatus) => {
