@@ -9,6 +9,7 @@ import { BlogStatus } from "@/src/types/type";
 import { formatTags } from "./formatTags";
 import { apiClient } from "@/src/lib/axiosClient";
 import { useRouter } from "next/navigation";
+import { useNotificationStore } from "@/src/components/Notification/useNotificationStore";
 
 const DEFAULT_VALUES: BlogEditorInput = {
     title: "",
@@ -52,14 +53,21 @@ export default function BlogEditor({ blogId, status, editorMode, ...props }: Blo
             } else {
                 await apiClient.post("/blog/update", { uuid: blogId, ...payload });
             }
+            addNotification(`ブログが正常に${editorMode === "create" ? "作成" : "更新"}されました。`, "info");
             router.push(`/manage_blog?page=1&limit=20&status=${status}`)
         } catch (e) {
-            console.error(e);
+            addNotification(`ブログの${editorMode === "create" ? "作成" : "更新"}に失敗しました。`, "error");
         }
     };
 
+    const { addNotification } = useNotificationStore();
+
+    const onError = () => {
+        addNotification("入力内容に誤りがあります。", "error");
+    }
+
     const submitBlog = (action: BlogStatus) => {
-        return handleSubmit((data) => onSubmit(data, action))();
+        return handleSubmit((data) => onSubmit(data, action), onError)();
     };
 
     const CreateInputClass = (error: FieldError | undefined, className?: string): string => {

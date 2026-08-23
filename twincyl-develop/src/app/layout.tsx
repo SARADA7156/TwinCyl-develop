@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
+import { Notification } from "../components/Notification/Notification";
 
 const notoSans = Noto_Sans_JP({
   subsets: ['latin'],
@@ -21,6 +22,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         {children}
+        <Notification />
       </body>
     </html>
   );
