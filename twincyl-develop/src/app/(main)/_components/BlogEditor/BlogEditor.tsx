@@ -53,7 +53,6 @@ export default function BlogEditor({ blogId, status, editorMode, ...props }: Blo
             } else {
                 await apiClient.post("/blog/update", { uuid: blogId, ...payload });
             }
-            addNotification(`ブログが正常に${editorMode === "create" ? "作成" : "更新"}されました。`, "info");
             router.push(`/manage_blog?page=1&limit=20&status=${status}`)
         } catch (e) {
             addNotification(`ブログの${editorMode === "create" ? "作成" : "更新"}に失敗しました。`, "error");

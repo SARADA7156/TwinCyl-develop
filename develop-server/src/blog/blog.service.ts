@@ -35,7 +35,7 @@ export class BlogService {
         this.logger.log(`新しいブログが id: ${result._id} として保存されました。 公開状態: ${status}`);
         this.notification.send({
             level: "info",
-            message: `新しいブログが id: ${result._id} として保存されました。 公開状態: ${status}`
+            message: `新しいブログが正常に保存されました。 公開状態: ${status}`
         });
 
         return result;
